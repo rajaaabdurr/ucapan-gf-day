@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy GF Day 💖</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #ffddee, #fff3f3);
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .center-text {
+      margin-top: 30px;
+      text-align: center;
+      color: #d63384;
+      z-index: 3;
+      position: relative;
+    }
+
+
+        @media (max-width: 576px) {
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #playBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 5;
+    }
+
+    .slideshow {
+        margin-top: 20px;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+      }
+
+
+    .slideshow img {
+      width: 80vw;
+      margin: 0 auto;
+      max-width: 300px;
+      height: auto;
+      object-fit: cover;
+      z-index: 1; 
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+      animation: fade 6s ease-in-out infinite alternate; 
+      display: block;
+  
+    }
+
+
+    @keyframes fade {
+      0% { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .lyrics {
+      position: relative;
+      bottom: 0;
+      text-align: center;
+      padding: 2rem;
+      color: #c2185b;
+      font-size: 1rem;
+      max-width: 700px;
+      margin: 0 auto;
+      z-index: 2;
+    }
+
+    .overlay-text {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      color: #e83e8c;
+      font-weight: bold;
+      font-size: 1.8rem;
+    }
+
+
+    #musicButton {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ucapan -->
+   <div class="container text-center py-3 px-2">
+  <div class="overlay-text">
+    <h1>Happy National GF Day 💖</h1>
+    <p>
+      <strong>Putri Dwi Triesa Reiyn On</strong> 🌸<br></p>
+  </div>
+   </div>
+
+  <!-- Slideshow -->
+  <div class="slideshow">
+    <img id="slideImage" src="gambar/awal.jpg" alt="Foto berdua" />
+  </div>
+
+<div class="lyrics"> <p> I LOVE YOU SO MUCHHHHHH💐</p></div>
+  <!-- Musik -->
+  <audio id="bgMusic" autoplay loop>
+    <source src="music/Ed Sheeran - Perfect.mp3" type="audio/mp3">
+  </audio>
+
+  <!-- Tombol Play Musik -->
+  <button id="playBtn" class="btn btn-danger btn-lg shadow">Putar Musik 🎶</button>
+
+  <!-- Canvas Bunga -->
+  <canvas id="flowerCanvas"></canvas>
+
+  <!-- Script -->
+  <script>
+    window.onload = () => {
+      // SweetAlert ucapan awal
+      Swal.fire({
+        title: 'Hai Putri 💕',
+        text: 'Happy National GF DAYYYY! 🌹',
+        imageUrl: 'gambar/depan.jpg',
+        imageWidth: 200,
+        background: '#fff0f5',
+        confirmButtonColor: '#e83e8c',
+        confirmButtonText: 'Love you too 💌'
+      });
+
+      // Confetti
+      confetti({
+        particleCount: 150,
+        spread: 120,
+        origin: { y: 0.6 }
+      });
+
+      // Atur gambar pertama
+      const slideImage = document.getElementById("slideImage");
+      const photos = ["gambar/awal.jpg", "gambar/1.jpg", "gambar/2.jpg", "gambar/3.jpg", "gambar/4.jpg", "gambar/5.jpg", "gambar/6.jpg", "gambar/7.jpg", "gambar/8.jpg"];
+      let index = 0;
+
+      // Ganti gambar tiap 3 detik
+      setInterval(() => {
+        index = (index + 1) % photos.length;
+        slideImage.src = photos[index];
+      }, 6000);
+    };
+
+    // Musik
+    const music = document.getElementById("bgMusic");
+    const playBtn = document.getElementById("playBtn");
+    playBtn.addEventListener("click", () => {
+      music.play();
+      playBtn.style.display = "none";
+    });
+
+    // Animasi bunga jatuh
+    const canvas = document.getElementById("flowerCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const flowerImage = new Image();
+    flowerImage.src = "gambar/flower.png";
+
+    class Flower {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height;
+        this.speed = 1 + Math.random() * 3;
+        this.size = 20 + Math.random() * 30;
+      }
+
+      draw() {
+        ctx.drawImage(flowerImage, this.x, this.y, this.size, this.size);
+      }
+
+      update() {
+        this.y += this.speed;
+        if (this.y > canvas.height) {
+          this.y = -this.size;
+          this.x = Math.random() * canvas.width;
+        }
+      }
+    }
+
+    let flowers = [];
+
+    function initFlowers() {
+      flowers = [];
+      for (let i = 0; i < 40; i++) {
+        flowers.push(new Flower());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let flower of flowers) {
+        flower.update();
+        flower.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initFlowers();
+    });
+
+    flowerImage.onload = () => {
+      initFlowers();
+      animate();
+    };
+  </script>
+
+</body>
+</html>
